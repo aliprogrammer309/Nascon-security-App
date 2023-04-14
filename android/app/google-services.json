@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1027768022565",
+    "project_id": "nascon-app-22713",
+    "storage_bucket": "nascon-app-22713.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027768022565:android:98fb104373b39e08b2f1cc",
+        "android_client_info": {
+          "package_name": "com.example.nascon_security_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027768022565-u9f1ef0e7o6qti1t9bofb5hn8chj7scg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcO6JqkdkgRVEaKdNM6umCGwXK4HbrlPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027768022565-u9f1ef0e7o6qti1t9bofb5hn8chj7scg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027768022565:android:6d5263f7814cc785b2f1cc",
+        "android_client_info": {
+          "package_name": "com.nuktasoft.nascon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027768022565-u9f1ef0e7o6qti1t9bofb5hn8chj7scg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcO6JqkdkgRVEaKdNM6umCGwXK4HbrlPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027768022565-u9f1ef0e7o6qti1t9bofb5hn8chj7scg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
