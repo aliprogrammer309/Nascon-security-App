@@ -31,7 +31,8 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Login'),
+          title: Text('${context.select<LoginBloc, String>((bloc) => bloc.role)[0].toUpperCase()}'
+              '${context.select<LoginBloc, String>((bloc) => bloc.role).substring(1)} login'),
         ),
         body: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),

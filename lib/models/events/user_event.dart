@@ -1,4 +1,6 @@
 class UserEvent {
+  String docId;
+  String id;
   String name;
   String ph;
   String fee;
@@ -6,8 +8,11 @@ class UserEvent {
   String cnic;
   String email;
   String status;
+  int food_count;
 
   UserEvent({
+    required this.docId,
+    required this.id,
     required this.name,
     required this.ph,
     required this.fee,
@@ -15,5 +20,6 @@ class UserEvent {
     required this.cnic,
     required this.email,
     required this.status,
+    required this.food_count,
   });
 }

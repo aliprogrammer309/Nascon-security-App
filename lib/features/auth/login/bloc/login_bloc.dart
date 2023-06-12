@@ -9,7 +9,7 @@ import 'package:nascon_security_app/models/user/user.dart';
 import 'package:nascon_security_app/repos/auth_repo.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc({required this.authRepo, required this.appCubit})
+  LoginBloc({required this.authRepo, required this.appCubit, required this.role})
       : super(LoginStateImp(formState: InitialFormSubmissionState())){
     on<UpdateEmail>(_updateEmail);
     on<UpdatePassword>(_updatePassword);
@@ -18,6 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   AuthRepo authRepo;
   AppCubit appCubit;
+  String role;
 
   FutureOr<void> _updateEmail(UpdateEmail event, Emitter<LoginState> emit) {
     if(state is LoginStateImp){
@@ -36,12 +37,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit((state as LoginStateImp).copyWith(formState: LoadingFormSubmissionState()));
 
       try{
-        String userId = await authRepo.login(email: (state as LoginStateImp).email,
-            password: (state as LoginStateImp).password);
+        String userId;
+        if(role == 'security') {
+          userId = await authRepo.securityLogin(
+              email: (state as LoginStateImp).email,
+              password: (state as LoginStateImp).password);
+        }
+        else{
+          userId = await authRepo.foodLogin(
+              email: (state as LoginStateImp).email,
+              password: (state as LoginStateImp).password);
+        }
 
         emit((state as LoginStateImp).copyWith(formState: InitialFormSubmissionState()));
         User user = User(userId: userId, email: (state as LoginStateImp).email);
-        appCubit.login(user: user);
+        appCubit.login(user: user, role: role);
       }
       catch (e){
         emit(ErrorLoginState(error: e.toString()));

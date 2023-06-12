@@ -4,4 +4,8 @@ abstract class AppState{}
 
 class UnauthorizedAppState extends AppState{}
 
-class AuthorizedAppState extends AppState{}
+abstract class AuthorizedAppState extends AppState{}
+
+class SecurityAuthorizedAppState extends AuthorizedAppState{}
+
+class FoodAuthorizedAppState extends AuthorizedAppState{}

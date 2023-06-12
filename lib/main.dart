@@ -6,10 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nascon_security_app/core/app%20cubit/app_cubit.dart';
 import 'package:nascon_security_app/core/app%20cubit/app_state.dart';
+import 'package:nascon_security_app/features/auth/Role/role_page.dart';
 import 'package:nascon_security_app/features/auth/login/bloc/login_bloc.dart';
 import 'package:nascon_security_app/features/auth/login/login_page.dart';
 import 'package:nascon_security_app/features/home/barcode_scanner/bloc/home_bloc.dart';
 import 'package:nascon_security_app/features/home/barcode_scanner/home_page.dart';
+import 'package:nascon_security_app/features/home/food%20details/bloc/food_details_bloc.dart';
+import 'package:nascon_security_app/features/home/food%20details/food_details_page.dart';
 import 'package:nascon_security_app/features/home/user%20details/bloc/user_details_bloc.dart';
 import 'package:nascon_security_app/features/home/user%20details/user_details_page.dart';
 import 'package:nascon_security_app/repos/auth_repo.dart';
@@ -25,7 +28,9 @@ void main() async {
     RepositoryProvider(
       create: (BuildContext context) => AuthRepo(),
       child: BlocProvider(
-        create: (BuildContext context) => AppCubit(),
+        create: (BuildContext context) => AppCubit(
+          authRepo: context.read<AuthRepo>(),
+        ),
         child: const MyApp(),
       ),
     ),
@@ -57,19 +62,30 @@ class _MyAppState extends State<MyApp> {
   }
 
   late final GoRouter _router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/roles',
     routes: <RouteBase>[
       GoRoute(
-        path: '/login',
+        name: 'role',
+        path: '/roles',
         builder: (BuildContext context, GoRouterState state) {
-          return BlocProvider(
-            create: (BuildContext context) => LoginBloc(
-              authRepo: context.read<AuthRepo>(),
-              appCubit: context.read<AppCubit>(),
-            ),
-            child: const LoginPage(),
-          );
+          return const RolesPage();
         },
+        routes: [
+          GoRoute(
+            name: 'login',
+            path: 'login',
+            builder: (BuildContext context, GoRouterState state) {
+              return BlocProvider(
+                create: (BuildContext context) => LoginBloc(
+                  authRepo: context.read<AuthRepo>(),
+                  appCubit: context.read<AppCubit>(),
+                  role: state.queryParams['role']??'security',
+                ),
+                child: const LoginPage(),
+              );
+            },
+          ),
+        ]
       ),
       GoRoute(
         path: '/',
@@ -103,6 +119,23 @@ class _MyAppState extends State<MyApp> {
               );
             },
           ),
+          GoRoute(
+            path: 'food_details',
+            name: 'food_details',
+            builder: (BuildContext context, GoRouterState state) {
+              return RepositoryProvider(
+                create: (BuildContext context) => HomeRepo(),
+                child: BlocProvider(
+                  create: (BuildContext context) => FoodDetailsBloc(
+                    appCubit: context.read<AppCubit>(),
+                    homeRepo: context.read<HomeRepo>(),
+                    id: state.queryParams['id']!,
+                  ),
+                  child: const FoodDetailsPage(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     ],
@@ -111,11 +144,11 @@ class _MyAppState extends State<MyApp> {
       log(context.read<AppCubit>().state.toString());
 
       if (context.read<AppCubit>().state is UnauthorizedAppState &&
-          routerState.location != '/login') {
-        return '/login';
+          (!routerState.location.contains('/roles') || !routerState.location.contains('/roles/login'))) {
+        return '/roles';
       }
       if (context.read<AppCubit>().state is AuthorizedAppState &&
-          routerState.location == '/login') {
+          (routerState.location.contains('/roles') || routerState.location.contains('/roles/login'))) {
         return '/';
       }
 

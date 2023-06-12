@@ -2,7 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nascon_security_app/core/app%20cubit/app_state.dart';
+import 'package:nascon_security_app/features/home/barcode_scanner/bloc/home_bloc.dart';
+import 'package:nascon_security_app/features/home/barcode_scanner/bloc/home_event.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +20,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NasCon Security'),
+        title: Text(context.read<HomeBloc>().appCubit.state is SecurityAuthorizedAppState?
+        'Nascon Security': 'Nascon Food'),
+        actions: [
+          IconButton(onPressed: (){
+            context.read<HomeBloc>().add(Logout());
+            context.goNamed('role');
+          }, icon: const Icon(Icons.logout),)
+        ],
       ),
       body: Center(
         child: ElevatedButton(
@@ -31,7 +42,14 @@ class _HomePageState extends State<HomePage> {
 
               log(barcodeScanRes);
 
-              context.goNamed('user_details', queryParams: {'id': barcodeScanRes});
+              if(context.read<HomeBloc>().appCubit.state is SecurityAuthorizedAppState) {
+                context.goNamed(
+                    'user_details', queryParams: {'id': barcodeScanRes});
+              }
+              else{
+                context.goNamed(
+                    'food_details', queryParams: {'id': barcodeScanRes});
+              }
             }
             catch (e){
               log(e.toString());
